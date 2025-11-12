@@ -68,6 +68,13 @@
         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     }
 
+    .buttonDiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+    }
+
     button {
         background-color: #95D9C3;
         color: #fff;
@@ -98,11 +105,14 @@
 
     <main>
         <input type="text">
-        <button>Check</button>
+        <div class="buttonDiv"><button>Check</button></div>
+
         <div class="results">
+            <p class="guess"></p>
+            <div class="message"></div>
             <p>Previous Guesses: <span class="prev-guesses"></span></p>
             <p>Guesses Remaining: <span class="remaining-guesses"></span></p>
-            <div class="message"></div>
+            
         </div>
     </main>
 </body>

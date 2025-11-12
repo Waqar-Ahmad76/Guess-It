@@ -1,73 +1,107 @@
-let randomNum = Math.round(Math.random() * 100 + 1);
+let randomNum = Math.floor(Math.random() * 100) + 1;
 // console.log(randomNum)
 let guessedNums = [];
 let guessesRemaining = 10;
 let playGame = true;
 let input = document.querySelector("input");
 let prevGuesses = document.querySelector(".prev-guesses");
-let remainingGuesses = document.querySelector(".remaining-guesses");
+let guessesLeft = document.querySelector(".remaining-guesses");
 let messageDiv = document.querySelector(".message");
 
 prevGuesses.innerHTML = guessedNums;
-remainingGuesses.innerHTML = guessesRemaining;
+guessesLeft.innerHTML = guessesRemaining;
+let buttonDiv = document.querySelector(".buttonDiv")
 
 let button = document.querySelector("button");
 
 
-function validateGuess(input) {
-    if (input <= 0 || input > 100) {
-        showMessage('Please enter a number between 1 and 100');
+function validateGuess(guess) {
+    if (guess <= 0 || guess > 100) {
+        alert('Please enter a number between 1 and 100');
+        return false;
     }
-    else if (isNaN(input)) {
-        showMessage("Please enter a number ");
+    else if (isNaN(guess)) {
+        alert("Please enter a number ");
+        return false;
     }
     else {
-        
+        return true;
     }
 
 }
-
 
 function showMessage(message) {
     messageDiv.innerHTML = message;
 }
 
-
-function newGame() {
-    //
-}
-
-
 function endGame() {
-    //
+    playGame = false;
+    input.setAttribute('disabled', '');
+    let newGameButton = document.createElement('button');
+    newGameButton.innerHTML = `New Game`;
+    buttonDiv.appendChild(newGameButton);
+    newGameButton.addEventListener("click", () => {
+        location.reload();
+    })
+    // prevGuesses.innerHTML = ``;
+    // guessesLeft.innerHTML = ``;
 }
+
+function setPrevGuesses(guessedNums) {
+    prevGuesses.innerHTML = guessedNums;
+}
+
+function setRemainingGuesses(guessesRemaining) {
+    guessesLeft.innerHTML = guessesRemaining;
+}
+
+
+
+function displayGuess(guess) {
+    let guessPara = document.querySelector(".guess");
+    guessPara.innerHTML = `You guessed ${guess}`;
+}
+
+function compareGuess(guess) {
+    displayGuess(guess);
+    if (guess === randomNum) {
+        showMessage(`You guessed it right!`);
+        endGame();
+        // newGame();
+    }
+    else {
+
+        guessesRemaining--;
+        guessedNums.push(guess);
+        if (guess > randomNum) {
+            showMessage("Guessed number is higher");
+        }
+        else {
+            showMessage("Guessed number is lower");
+        }
+        setPrevGuesses(guessedNums);
+        setRemainingGuesses(guessesRemaining);
+
+    }
+}
+
 
 if (playGame) {
     button.addEventListener("click", (e) => {
-
-
-        // console.log(button)
-        let inputNum = parseInt(input.vlaue);
-        validateGuess(inputNum);
-
-
-        // console.log(messageDiv)
-        if (inputNum === randomNum) {
-            messageDiv.innerHTML = "Congrats! you guessed the word";
-
+        // console.log(randomNum)
+        let inputVal = input.value;
+        let guess = parseInt(inputVal);
+        let inputValidated = validateGuess(guess);
+        if (inputValidated) {
+            compareGuess(guess);
+            if (guessesRemaining === 0) {
+                endGame();
+            }
+            input.value = ``;
         }
         else {
-            guessedNums.push(inputNum);
-            guessesRemaining--;
-            prevGuesses.innerHTML = guessedNums;
-            remainingGuesses.innerHTML = guessesRemaining
-            input.value = '';
-            if (inputNum > randomNum) {
-                messageDiv.innerHTML = `Guessed number is higher`;
-            }
-            else {
-                messageDiv.innerHTML = `Guessed number is lower`;
-            }
+            input.value = ``;
+            return;
         }
     })
 }
